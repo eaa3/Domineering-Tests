@@ -32,7 +32,7 @@ public class TestsDomineeringClean {
 	ProxyGameTree solutionGameTree;
 	GameTree<DomineeringMove> studentGameTree;
 
-	static final String TREE_FILE_PREFIX="tests4students/test_data/treeDomineering";
+	static final String TREE_FILE_PREFIX="test_data/treeDomineering";
 	static final String TREE_FILE_SUFIX=".pgt";
 
 	/**
@@ -51,7 +51,7 @@ public class TestsDomineeringClean {
 
 		heightAssertion(solutionGameTree, studentGameTree);
 
-		System.out.println("TestsDomineering: Passed HEIGHT test with board dimensions " + m +"x" + m + "!");
+		System.out.println("TestsDomineering: Passed HEIGHT test with board dimensions " + m +"x" + n + "!");
 	}
 
 	/**

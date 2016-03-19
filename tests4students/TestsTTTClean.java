@@ -30,7 +30,7 @@ public class TestsTTTClean {
 
 	GameTree<TTTMove> studentGameTree;
 
-	static final String TREE_FILE="tests4students/test_data/treeTTT4x4.pgt";
+	static final String TREE_FILE="test_data/treeTTT4x4.pgt";
 
 	/**
 	 * Initialise test data
