@@ -1,5 +1,9 @@
 # MiniMax-Tests
 
+Testing script for the part 1 of the the domineering assingment.
+
+- [Part 1](https://github.com/ToastNumber/domineering/blob/master/domineering-part1.md)
+
 
 # Usage
 

@@ -129,7 +129,7 @@ public class TestsDomineeringClean {
 
 		Set< Map.Entry<DomineeringMove,GameTree<DomineeringMove> > > entrySetStudent = studentGameTree.children().entrySet();
 		Iterator< Map.Entry<DomineeringMove,GameTree<DomineeringMove>> > itStudent = entrySetStudent.iterator();
-
+		itSolution.next();
 		while( itSolution.hasNext() ||  itStudent.hasNext()){
 
 			Map.Entry<Integer,ProxyGameTree> solutionEntry = itSolution.next();
