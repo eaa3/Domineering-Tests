@@ -21,19 +21,22 @@ import com.pholser.junit.quickcheck.generator.InRange;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 import java.util.*;
 
 
 @RunWith(JUnitQuickcheck.class)
-public class TestsDomineeringClean {
+public class TestsDomineeringClean2 {
 
 
 	ProxyGameTree solutionGameTree;
 	GameTree<DomineeringMove> studentGameTree;
+	ArrayList<Integer> solutionVals, studentVals;
 
 	static final String TREE_FILE_PREFIX="test_data/treeDomineering";
 	static final String TREE_FILE_SUFIX=".pgt";
+
 
 	/**
 	 * Every subtree of the student's game tree should have the same height 
@@ -43,13 +46,22 @@ public class TestsDomineeringClean {
 	@Property
 	public void heightShouldMatchSolution(@InRange(min = "0", max = "4") Integer m, @InRange(min = "0", max = "4") Integer n){
 
+		solutionVals = new ArrayList<Integer>();
+		studentVals = new ArrayList<Integer>();
+
 		DomineeringBoard studentBoard = new DomineeringBoard(m,n);
 		
 		String treeFile = TREE_FILE_PREFIX + m + "x" + n + TREE_FILE_SUFIX;
 		solutionGameTree = Utils.load(treeFile);
 		studentGameTree = studentBoard.tree();
 
-		heightAssertion(solutionGameTree, studentGameTree);
+		heightTraversal(solutionGameTree, studentGameTree,solutionVals,studentVals);
+
+
+		Collections.sort(solutionVals);
+		Collections.sort(studentVals);
+
+		assertArrayEquals(solutionVals.toArray(),studentVals.toArray());
 
 		//System.out.println("TestsDomineering: Passed HEIGHT test with board dimensions " + m +"x" + n + "!");
 	}
@@ -62,6 +74,9 @@ public class TestsDomineeringClean {
 	@Property
 	public void sizeShouldMatchSolution(@InRange(min = "0", max = "4") Integer m, @InRange(min = "0", max = "4") Integer n){
 
+		solutionVals = new ArrayList<Integer>();
+		studentVals = new ArrayList<Integer>();
+
 		DomineeringBoard studentBoard = new DomineeringBoard(m,n);
 
 
@@ -70,7 +85,7 @@ public class TestsDomineeringClean {
 
 		studentGameTree = studentBoard.tree();
 
-		sizeAssertion(solutionGameTree, studentGameTree);
+		sizeTraversal(solutionGameTree, studentGameTree,solutionVals,studentVals);
 
 		//System.out.println("TestsDomineering: Passed SIZE test with board dimensions " + m +"x" + n + "!");
 	
@@ -78,17 +93,26 @@ public class TestsDomineeringClean {
 
 
 	/**
-	 * Traverses trees in pre-order asserting that every subtree has the same height
+	 * Traverses trees in pre-order adding the size of each corresponding subtree in their respective arrays
 	 *
 	 * @param solutionGameTree
 	 *            the solution game tree
 	 * @param studentGameTree
 	 *            student's game tree
+	 * @param solutionVals
+	 *            size values for all subtrees of solutionGameTree
+	 * @param studentVals
+	 *            size values for all subtrees of studentGameTree
 	 */
-	public void heightAssertion(ProxyGameTree solutionGameTree, 
-								GameTree<DomineeringMove> studentGameTree) {
+	public void heightTraversal(ProxyGameTree solutionGameTree, 
+								GameTree<DomineeringMove> studentGameTree,
+								ArrayList<Integer> solutionVals, 
+								ArrayList<Integer> studentVals) {
 
-		assertEquals(solutionGameTree.height(),studentGameTree.height());
+		solutionVals.add(solutionGameTree.height());
+		studentVals.add(studentGameTree.height());
+
+		//assertEquals(solutionGameTree.height(),studentGameTree.height());
 
 
 		Set< Map.Entry<Integer,ProxyGameTree> > entrySetSolution = solutionGameTree.children().entrySet();
@@ -104,25 +128,31 @@ public class TestsDomineeringClean {
 			Map.Entry<DomineeringMove,GameTree<DomineeringMove> > studentEntry = itStudent.next();
 
 
-			heightAssertion(solutionEntry.getValue(), studentEntry.getValue());
+			heightTraversal(solutionEntry.getValue(), studentEntry.getValue(),solutionVals,studentVals);
 
 		}
 
 	}
 
 	/**
-	 * Traverses trees in pre-order asserting that every subtree has the same number of nodes (size)
+	 * Traverses trees in pre-order adding the size of each corresponding subtree in their respective arrays
 	 *
 	 * @param solutionGameTree
 	 *            the solution game tree
 	 * @param studentGameTree
 	 *            student's game tree
+	 * @param solutionVals
+	 *            size values for all subtrees of solutionGameTree
+	 * @param studentVals
+	 *            size values for all subtrees of studentGameTree
 	 */
-	public void sizeAssertion(ProxyGameTree solutionGameTree, 
-							  GameTree<DomineeringMove> studentGameTree) {
+	public void sizeTraversal(ProxyGameTree solutionGameTree, 
+							  GameTree<DomineeringMove> studentGameTree,
+							  ArrayList<Integer> solutionVals, 
+							  ArrayList<Integer> studentVals) {
 
-		assertEquals(solutionGameTree.size(),studentGameTree.size());
-
+		solutionVals.add(solutionGameTree.size());
+		studentVals.add(studentGameTree.size());
 
 		Set< Map.Entry<Integer,ProxyGameTree> > entrySetSolution = solutionGameTree.children().entrySet();
 		Iterator< Map.Entry<Integer,ProxyGameTree> > itSolution = entrySetSolution.iterator();
@@ -136,7 +166,7 @@ public class TestsDomineeringClean {
 			Map.Entry<DomineeringMove,GameTree<DomineeringMove> > studentEntry = itStudent.next();
 
 
-			sizeAssertion(solutionEntry.getValue(), studentEntry.getValue());
+			sizeTraversal(solutionEntry.getValue(), studentEntry.getValue(),solutionVals,studentVals);
 
 		}
 
